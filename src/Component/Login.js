@@ -11,29 +11,20 @@ export default function Login(props) {
     setTimeout(progress(100), 1000);
   }, [progress]);
   document.title = "ShopOn - Login";
-  const [user, setUser] = useState("Buyer");
+
+  const [credential, setCredentail] = useState({
+    name: "",
+    password: "",
+    type: "Buyer",
+  });
   const [statement, setStatement] = useState("Get access to your Orders");
   const [alert, setAlert] = useState(true);
-  const buyer = () => {
-    setUser("Buyer");
-    setStatement("Get access to your Orders");
-  };
-  const seller = () => {
-    setUser("Seller");
-    setStatement("Sell on ShopOn");
-  };
 
-  const login = () => {
-    const data = JSON.stringify({
-      username: document.getElementById("inputUser").value,
-      password: document.getElementById("inputPassword").value,
-    });
-    fetch("https://fakestoreapi.com/auth/login", {
-      method: "POST",
-      body: data,
-    }).then((res) => {
-      console.log(res);
-    });
+  const handleLogin = () => {
+    console.log(credential);
+    setStatement(
+      "Sorry we ahve no end point to get you logged in.\n You can check console for credentail"
+    );
   };
 
   return (
@@ -63,7 +54,7 @@ export default function Login(props) {
           className={`col bg-${props.mode === "light" ? "info" : "dark"} p-0`}
         >
           <div className="fs-3 mt-3 px-3 text-white fw-semibold">
-            Login as {user}
+            Login as {credential.type}
           </div>
           <div className="fs-5 mt-2 px-3 text-secondary lh-1">{statement}</div>
           <div className="align-items-center d-inline-flex" id="moving">
@@ -86,6 +77,9 @@ export default function Login(props) {
                 className="form-control"
                 id="inputUser"
                 placeholder="Enter User Name"
+                onChange={(e) => {
+                  setCredentail({ ...credential, name: e.target.value });
+                }}
               />
             </div>
             <div className="mb-4">
@@ -97,6 +91,9 @@ export default function Login(props) {
                 className="form-control"
                 id="inputPassword"
                 placeholder="Enter Password"
+                onChange={(e) => {
+                  setCredentail({ ...credential, password: e.target.value });
+                }}
               />
             </div>
             Login As:
@@ -110,31 +107,34 @@ export default function Login(props) {
                   type="radio"
                   className="btn-check"
                   name="btnradio"
-                  id="btnradio1"
-                  autoComplete="off"
-                  defaultChecked={true}
-                  onChange={buyer}
-                />
-                <label
-                  className="btn btn-outline-light border-3 m-1 rounded fw-semibold px-3"
-                  htmlFor="btnradio1"
-                >
-                  Buyer
-                </label>
-
-                <input
-                  type="radio"
-                  className="btn-check"
-                  name="btnradio"
                   id="btnradio2"
                   autoComplete="off"
-                  onChange={seller}
+                  onChange={() => {
+                    setCredentail({ ...credential, type: "seller" });
+                  }}
                 />
                 <label
                   className="btn btn-outline-light border-3 m-1 rounded fw-semibold px-3"
                   htmlFor="btnradio2"
                 >
                   Seller
+                </label>
+                <input
+                  type="radio"
+                  className="btn-check"
+                  name="btnradio"
+                  id="btnradio1"
+                  autoComplete="off"
+                  defaultChecked={true}
+                  onChange={() => {
+                    setCredentail({ ...credential, type: "buyer" });
+                  }}
+                />
+                <label
+                  className="btn btn-outline-light border-3 m-1 rounded fw-semibold px-3"
+                  htmlFor="btnradio1"
+                >
+                  Buyer
                 </label>
               </div>
             </div>
@@ -145,7 +145,10 @@ export default function Login(props) {
               >
                 Sign Up for New User
               </Link>
-              <div className="btn btn-light fw-semibold px-3" onClick={login}>
+              <div
+                className="btn btn-light fw-semibold px-3"
+                onClick={handleLogin}
+              >
                 Login
               </div>
             </div>

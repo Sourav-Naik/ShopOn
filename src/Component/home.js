@@ -3,7 +3,6 @@ import React, {
   useState,
   useRef,
   useMemo,
-  memo,
   useCallback,
 } from "react";
 import Rendering from "./productRendering";
@@ -89,6 +88,7 @@ export default function Home(props) {
 
     allProducts &&
       setProducts(
+        // eslint-disable-next-line
         allProducts.map((element) => {
           if (element.rating.rate >= 4) {
             return <Rendering element={element} key={element.id} />;
@@ -100,6 +100,7 @@ export default function Home(props) {
     fetchCat();
     progress(90);
     progress(100);
+    // eslint-disable-next-line
   }, [progress, allProducts]);
 
   const visibility = useCallback((action) => {
@@ -133,7 +134,7 @@ export default function Home(props) {
       setScrollPosition(scrollPosition + scrollAmount);
       ref.current.scrollLeft = scrollPosition + scrollAmount;
     }
-  };  
+  };
 
   return (
     <>

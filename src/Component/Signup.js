@@ -9,38 +9,24 @@ export default function Signup(props) {
     setTimeout(progress(100), 1000);
   }, [progress]);
   document.title = "ShopOn - SignUp";
-  const [msg, setMsg] = useState("Sign up as Buyer"),
+
+  const [credentails, setCredentails] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPass: "",
+    type: "buyer",
+  });
+  const [msg, setMsg] = useState(`Sign up as buyer`),
     [statement, setStatement] = useState("Get access to your Orders"),
-    [emailMsg, setEmailMsg] = useState(""),
-    [passMsg, setPassMsg] = useState(""),
     [conPassMsg, setConPassMsg] = useState(""),
-    [user, setUser] = useState("Buyer"),
-    [alert, setAlert] = useState(true),
-    [checkMail, setCheckMail] = useState(false),
-    [checkPass, setCheckPass] = useState(false);
+    [alert, setAlert] = useState(true);
 
-  const buyer = () => {
-    setUser("Buyer");
-    setMsg("Sign up as Buyer");
-    setStatement("Became a user of ShopOn");
-  };
-
-  const seller = () => {
-    setUser("Seller");
-    setMsg("Sign up as Seller");
-    setStatement("Became a ShopOn Seller");
-  };
-
-  const handelOnFocusEmail = (event) => {
-    setEmailMsg("");
-    setCheckMail(true);
-  };
-
-  const handelOnBlurEmail = async (event) => {
+  const handleOnChangeEmail = (event) => {
+    setCredentails({ ...credentails, email: event.target.value });
     let pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,4}$/;
     let a = event.target.value.toLowerCase();
-    !pattern.test(a) && setEmailMsg("Invalid Email");
-    !pattern.test(a) && setCheckMail(false);
+    !pattern.test(a) && console.log("Invalid Email");
   };
 
   /*------------password--------------*/
@@ -50,82 +36,47 @@ export default function Signup(props) {
   };
 
   const handelOnChangePass = (event) => {
-    var lowerCaseLetters = /[a-z]/g;
-    var upperCaseLetters = /[A-Z]/g;
-    var numbers = /[0-9]/g;
-    var letter = document.getElementById("letter");
-    var capital = document.getElementById("capital");
-    var number = document.getElementById("number");
-    var length = document.getElementById("length");
-    let con1 = false,
-      con2 = false,
-      con3 = false,
-      con4 = false;
-    if (event.target.value.match(upperCaseLetters)) {
-      capital.classList.remove("invalid");
-      capital.classList.add("valid");
-      con1 = true;
+    const cond = event.target.parentNode.nextSibling.children;
+    if (event.target.value.match(/[a-z]/g)) {
+      cond[1].style.color = "green";
     } else {
-      capital.classList.remove("valid");
-      capital.classList.add("invalid");
-      con1 = false;
+      cond[1].style.color = "red";
     }
-    if (event.target.value.match(lowerCaseLetters)) {
-      letter.classList.remove("invalid");
-      letter.classList.add("valid");
-      con2 = true;
+    if (event.target.value.match(/[A-Z]/g)) {
+      cond[2].style.color = "green";
     } else {
-      letter.classList.remove("valid");
-      letter.classList.add("invalid");
-      con2 = false;
+      cond[2].style.color = "red";
     }
-    if (event.target.value.match(numbers)) {
-      number.classList.remove("invalid");
-      number.classList.add("valid");
-      con3 = true;
+    if (event.target.value.match(/[0-9]/g)) {
+      cond[3].style.color = "green";
     } else {
-      number.classList.remove("valid");
-      number.classList.add("invalid");
-      con3 = false;
+      cond[3].style.color = "red";
     }
     if (event.target.value.length >= 8) {
-      length.classList.remove("invalid");
-      length.classList.add("valid");
-      con4 = true;
+      cond[4].style.color = "green";
     } else {
-      length.classList.remove("valid");
-      length.classList.add("invalid");
-      con4 = false;
+      cond[4].style.color = "red";
     }
-    if (con1 && con2 && con3 && con4) {
-      setPassMsg("Valid Password");
-      setCheckPass(true);
-    } else {
-      setPassMsg("Invalid Password");
-      setCheckPass(false);
-    }
-
-    handleConPass();
+    setConPassMsg("");
+    event.target.parentNode.nextSibling.nextSibling.lastChild.value = "";
+    setCredentails({ ...credentails, password: event.target.value });
   };
 
   const handleConPass = (event) => {
     let pass = document.querySelector("#inputPassword").value;
     let conPass = document.querySelector("#inputConPass").value;
-    if (pass === conPass && checkPass) {
+    if (pass === conPass) {
       setConPassMsg("Confirmed");
     } else {
       setConPassMsg("Invalid");
     }
+    setCredentails({ ...credentails, confirmPass: event.target.value });
   };
 
   const signup = () => {
-    if (checkMail && conPassMsg === "Confirmed") {
-      let userName = document.getElementById("inputUserName").value;
-      setMsg("Sorry" + userName);
-      setStatement("Sorry presently we are not active" + user);
-    } else {
-      setStatement("Please fill the details first" + user);
-    }
+    console.log(credentails);
+    setMsg("Sorry" + credentails.name);
+    setStatement("Sorry presently we are not active " + credentails.name);
   };
 
   return (
@@ -172,22 +123,13 @@ export default function Signup(props) {
           <div className="mb-2">
             <label htmlFor="inputEmail" className="form-label mb-1">
               Email address
-              <sup
-                className={`${
-                  emailMsg === "Valid Email" ? "text-success" : "text-danger"
-                } ms-1`}
-                style={{ fontSize: 11 }}
-              >
-                {emailMsg}
-              </sup>
             </label>
             <input
               type="email"
               className="form-control"
               id="inputEmail"
               placeholder="example@mail.com"
-              onFocus={(event) => handelOnFocusEmail(event)}
-              onBlur={(event) => handelOnBlurEmail(event)}
+              onChange={(e) => handleOnChangeEmail(e)}
             />
           </div>
           {/* ------------------username--------------------- */}
@@ -195,51 +137,46 @@ export default function Signup(props) {
             <label htmlFor="inputUserName" className="form-label mb-1">
               User Name
             </label>
-            <input type="text" className="form-control" id="inputUserName" />
+            <input
+              type="text"
+              className="form-control"
+              id="inputUserName"
+              onChange={(e) => {
+                setCredentails({ ...credentails, name: e.target.value });
+              }}
+            />
           </div>
           {/*-------------------            password           --------------- */}
-          <>
-            <div className="mb-2">
-              <label htmlFor="inputPassword" className="form-label mb-1">
-                Password
-                <sup
-                  className={`${
-                    passMsg === "Valid Password"
-                      ? "text-success"
-                      : "text-danger"
-                  } ms-1`}
-                  style={{ fontSize: 11 }}
-                >
-                  {passMsg}
-                </sup>
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="inputPassword"
-                onChange={(event) => handelOnChangePass(event)}
-                onFocus={display("block")}
-                onBlur={display("none")}
-              />
-            </div>
-            <div className="bg-white text-dark py-2 px-4 rounded" id="message">
-              <p className="fs7 fw-bolder">
-                Password must contain the following:
-              </p>
-              <p id="letter" className="invalid fs7">
-                A <b>lowercase</b> letter
-              </p>
-              <p id="capital" className="invalid fs7">
-                A <b>Uppercase</b> letter
-              </p>
-              <p id="number" className="invalid fs7">
-                A <b>Number</b>
-              </p>
-              <p id="length" className="invalid fs7">
-                Minimum <b>8 characters</b>
-              </p>
-            </div>
-          </>
+          <div className="mb-2">
+            <label htmlFor="inputPassword" className="form-label mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              className="form-control"
+              id="inputPassword"
+              onChange={(event) => handelOnChangePass(event)}
+              onFocus={() => display("block")}
+              onBlur={() => display("none")}
+            />
+          </div>
+          <div className="bg-white text-dark py-2 px-4 rounded" id="message">
+            <p className="fs7 fw-bolder">
+              Password must contain the following:
+            </p>
+            <p id="letter" className="invalid fs7">
+              A <b>lowercase</b> letter
+            </p>
+            <p id="capital" className="invalid fs7">
+              A <b>Uppercase</b> letter
+            </p>
+            <p id="number" className="invalid fs7">
+              A <b>Number</b>
+            </p>
+            <p id="length" className="invalid fs7">
+              Minimum <b>8 characters</b>
+            </p>
+          </div>
           {/* -----------------Confirm pass---------------------- */}
           <div className="mb-2">
             <label htmlFor="inputConPass" className="form-label mb-1">
@@ -275,7 +212,10 @@ export default function Signup(props) {
                 id="btnradio1"
                 autoComplete="off"
                 defaultChecked={true}
-                onChange={buyer}
+                onChange={() => {
+                  setCredentails({ ...credentails, type: "buyer" });
+                  setMsg("Sign up as buyer");
+                }}
               />
               <label
                 className="btn btn-outline-light border-3 m-1 rounded fw-semibold px-3"
@@ -290,7 +230,10 @@ export default function Signup(props) {
                 name="btnradio"
                 id="btnradio2"
                 autoComplete="off"
-                onChange={seller}
+                onChange={() => {
+                  setCredentails({ ...credentails, type: "seller" });
+                  setMsg("Sign up as seller");
+                }}
               />
               <label
                 className="btn btn-outline-light border-3 m-1 rounded fw-semibold px-3"

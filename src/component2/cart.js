@@ -30,18 +30,21 @@ export default function Cart(props) {
   }, []);
 
   const handleRemoveAllCart = () => {
+    // eslint-disable-next-line
     cartItems.map((item) => {
       dispatch(removeFromCart(item));
     });
   };
 
   const handleRemoveAllWishlist = () => {
+    // eslint-disable-next-line
     wishlistItems.map((item) => {
       dispatch(removeFromWishlist(item));
     });
   };
 
   const handleAddAllWishlist = () => {
+    // eslint-disable-next-line
     cartItems.map((item) => {
       dispatch(removeFromCart(item));
       dispatch(addToWishlist(item));
@@ -49,6 +52,7 @@ export default function Cart(props) {
   };
 
   const handleAddAllCart = () => {
+    // eslint-disable-next-line
     wishlistItems.map((item) => {
       dispatch(removeFromWishlist(item));
       dispatch(addToCart(item));
@@ -62,6 +66,7 @@ export default function Cart(props) {
     let totalQuantity = 0;
     let totalAmount = 0;
     let i = 0;
+    // eslint-disable-next-line
     cartItems.map((item) => {
       finalAmount = item.amount + finalAmount;
       totalQuantity = totalQuantity + parseInt(item.quantity);
