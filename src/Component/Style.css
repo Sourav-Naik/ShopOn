@@ -1,0 +1,79 @@
+@keyframes move {
+  0% {
+    left: -50%;
+  }
+  10% {
+    left: 0px;
+  }
+  70% {
+    left: 0px;
+  }
+  100% {
+    left: 800px;
+  }
+}
+#moving {
+  position: relative;
+  left: -50%;
+  animation: move 5s linear 0s infinite;
+  margin-top: 100px;
+}
+#box {
+  overflow: hidden;
+}
+#moving1 {
+  position: relative;
+  left: -50%;
+  animation: move 5s linear 0s infinite;
+  margin-top: 175px;
+}
+.fs7 {
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0;
+}
+#message {
+  display: none;
+}
+
+.valid {
+  color: green;
+}
+
+.invalid {
+  color: red;
+}
+.star {
+  color: #ffd43b;
+  font-size: 10px;
+}
+#img {
+  justify-self: center;
+}
+.title {
+  overflow: hidden;
+  max-height: 23px;
+  text-decoration: none;
+  color: black;
+}
+.scrollContainer {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+}
+#products {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: scroll;
+  scroll-behavior: smooth;
+}
+#products::-webkit-scrollbar {
+  display: none;
+}
+.scrollButton {
+  border: none;
+  padding: 40px 6px;
+  background: rgb(240, 240, 240);
+  visibility: hidden;
+}

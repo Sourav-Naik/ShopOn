@@ -1,0 +1,42 @@
+.form-group-quantity {
+  margin-top: 15px;
+  min-width: 90px;
+  max-width: 90px;
+  border-radius: 7px;
+}
+.form-group-quantity > label {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  max-width: 66px;
+  max-width: 66px;
+  z-index: 1;
+  border-radius: 4px;
+  padding: 0 3px;
+}
+.form-group-quantity > .span {
+  position: absolute;
+  top: -11px;
+  left: 9px;
+  z-index: -1;
+  min-width: 68px;
+  max-width: 68px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.min-width-100 {
+  min-width: 100px;
+}
+
+.form-group-quantity > .form-control {
+  border-radius: 0px 7px;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+:hover.cat-nav-btn {
+  border-collapse: left;
+  transform: translate(0, -5px) scaleY(1.2);
+}
