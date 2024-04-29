@@ -8,6 +8,7 @@ export default function Signup(props) {
     setTimeout(progress(66), 500);
     setTimeout(progress(100), 1000);
   }, [progress]);
+
   document.title = "ShopOn - SignUp";
 
   const [credentails, setCredentails] = useState({
@@ -17,37 +18,46 @@ export default function Signup(props) {
     confirmPass: "",
     type: "buyer",
   });
+
   const [msg, setMsg] = useState(`Sign up as buyer`),
     [statement, setStatement] = useState("Get access to your Orders"),
-    [conPassMsg, setConPassMsg] = useState(""),
-    [alert, setAlert] = useState(true);
+    [conPassMsg, setConPassMsg] = useState(0),
+    [emailMsg, setEmailMsg] = useState(0),
+    [nameMsg, setNameMsg] = useState(0),
+    [passMsg, setPassMsg] = useState(0),
+    [alert, setAlert] = useState({
+      state: true,
+      msg: "No API ",
+      des: "Currently No API for sign in",
+    });
 
   const handleOnChangeEmail = (event) => {
     setCredentails({ ...credentails, email: event.target.value });
     let pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,4}$/;
     let a = event.target.value.toLowerCase();
-    !pattern.test(a) && console.log("Invalid Email");
+    pattern.test(a) ? setEmailMsg(1) : setEmailMsg(2);
   };
 
   /*------------password--------------*/
-  const display = (action) => {
-    let element = document.getElementById("message");
+  const display = (action, e) => {
+    let element = e.target.parentNode.nextSibling;
     element && (element.style.display = action);
   };
 
   const handelOnChangePass = (event) => {
     const cond = event.target.parentNode.nextSibling.children;
-    if (event.target.value.match(/[a-z]/g)) {
+    let value = event.target.value;
+    if (value.match(/[a-z]/g)) {
       cond[1].style.color = "green";
     } else {
       cond[1].style.color = "red";
     }
-    if (event.target.value.match(/[A-Z]/g)) {
+    if (value.match(/[A-Z]/g)) {
       cond[2].style.color = "green";
     } else {
       cond[2].style.color = "red";
     }
-    if (event.target.value.match(/[0-9]/g)) {
+    if (value.match(/[0-9]/g)) {
       cond[3].style.color = "green";
     } else {
       cond[3].style.color = "red";
@@ -57,6 +67,17 @@ export default function Signup(props) {
     } else {
       cond[4].style.color = "red";
     }
+    if (
+      value.match(/[a-z]/g) &&
+      value.match(/[A-Z]/g) &&
+      value.match(/[0-9]/g) &&
+      event.target.value.length >= 8
+    ) {
+      setPassMsg(1);
+    } else if (event.target.value.length >= 8) {
+      setPassMsg(2);
+    }
+
     setConPassMsg("");
     event.target.parentNode.nextSibling.nextSibling.lastChild.value = "";
     setCredentails({ ...credentails, password: event.target.value });
@@ -64,29 +85,38 @@ export default function Signup(props) {
 
   const handleConPass = (event) => {
     let pass = document.querySelector("#inputPassword").value;
-    let conPass = document.querySelector("#inputConPass").value;
+    let conPass = event.target.value;
     if (pass === conPass) {
-      setConPassMsg("Confirmed");
+      setConPassMsg(1);
     } else {
-      setConPassMsg("Invalid");
+      setConPassMsg(2);
     }
     setCredentails({ ...credentails, confirmPass: event.target.value });
   };
 
   const signup = () => {
-    console.log(credentails);
-    setMsg("Sorry" + credentails.name);
-    setStatement("Sorry presently we are not active " + credentails.name);
+    if (emailMsg === 1 && nameMsg === 1 && passMsg === 1 && conPassMsg === 1) {
+      console.log(credentails);
+      setMsg("Sorry" + credentails.name);
+      setStatement("Sorry presently we are not active " + credentails.name);
+    } else {
+      console.log(emailMsg, nameMsg, passMsg, conPassMsg);
+      setAlert({
+        state: true,
+        msg: "Invalid Credentails",
+        des: "Please Check and change the credentials",
+      });
+    }
   };
 
   return (
     <>
-      {alert && (
+      {alert.state && (
         <div
           className="alert alert-danger alert-dismissible fade show m-0 position-fixed top-0 min-vw-100"
           role="alert"
         >
-          <strong>No API</strong> Currently No API for sign in.
+          <strong>{alert.msg}</strong> {alert.des}.
           <button
             type="button"
             className="btn-close"
@@ -120,9 +150,22 @@ export default function Signup(props) {
             props.mode === "light" ? "info" : "dark"
           } `}
         >
+          {/* ------------------email--------------------- */}
           <div className="mb-2">
-            <label htmlFor="inputEmail" className="form-label mb-1">
-              Email address
+            <label
+              htmlFor="inputEmail"
+              className="form-label mb-1 d-flex align-items-center"
+            >
+              Email address{" "}
+              <span
+                className={`${
+                  emailMsg === 1 ? "text-success" : "text-danger"
+                } ms-1 lh-1 fs-5`}
+                style={{ fontSize: 11 }}
+              >
+                {emailMsg === 1 && <i className="fa-solid fa-circle-check" />}
+                {emailMsg === 2 && <i className="fa-solid fa-circle-xmark" />}
+              </span>
             </label>
             <input
               type="email"
@@ -133,9 +176,21 @@ export default function Signup(props) {
             />
           </div>
           {/* ------------------username--------------------- */}
-          <div>
-            <label htmlFor="inputUserName" className="form-label mb-1">
-              User Name
+          <div className="mb-2">
+            <label
+              htmlFor="inputUserName"
+              className="form-label mb-1 d-flex align-items-center"
+            >
+              User Name{" "}
+              <span
+                className={`${
+                  nameMsg === 1 ? "text-success" : "text-danger"
+                } ms-1 lh-1 fs-5`}
+                style={{ fontSize: 11 }}
+              >
+                {nameMsg === 1 && <i className="fa-solid fa-circle-check" />}
+                {nameMsg === 2 && <i className="fa-solid fa-circle-xmark" />}
+              </span>
             </label>
             <input
               type="text"
@@ -143,21 +198,34 @@ export default function Signup(props) {
               id="inputUserName"
               onChange={(e) => {
                 setCredentails({ ...credentails, name: e.target.value });
+                e.target.value.length > 7 ? setNameMsg(1) : setNameMsg(2);
               }}
             />
           </div>
-          {/*-------------------            password           --------------- */}
+          {/*-------------------password--------------------- */}
           <div className="mb-2">
-            <label htmlFor="inputPassword" className="form-label mb-1">
-              Password
+            <label
+              htmlFor="inputPassword"
+              className="form-label mb-1 d-flex align-items-center"
+            >
+              Password{" "}
+              <span
+                className={`${
+                  passMsg === 1 ? "text-success" : "text-danger"
+                } ms-1 lh-1 fs-5`}
+                style={{ fontSize: 11 }}
+              >
+                {passMsg === 1 && <i className="fa-solid fa-circle-check" />}
+                {passMsg === 2 && <i className="fa-solid fa-circle-xmark" />}
+              </span>
             </label>
             <input
               type="password"
               className="form-control"
               id="inputPassword"
               onChange={(event) => handelOnChangePass(event)}
-              onFocus={() => display("block")}
-              onBlur={() => display("none")}
+              onFocus={(e) => display("block", e)}
+              onBlur={(e) => display("none", e)}
             />
           </div>
           <div className="bg-white text-dark py-2 px-4 rounded" id="message">
@@ -177,18 +245,22 @@ export default function Signup(props) {
               Minimum <b>8 characters</b>
             </p>
           </div>
-          {/* -----------------Confirm pass---------------------- */}
+          {/* -----------------Confirm pass------------------ */}
           <div className="mb-2">
-            <label htmlFor="inputConPass" className="form-label mb-1">
+            <label
+              htmlFor="inputConPass"
+              className="form-label mb-1 d-flex align-items-center"
+            >
               Confirm Password
-              <sup
+              <span
                 className={`${
-                  conPassMsg === "Confirmed" ? "text-success" : "text-danger"
-                } ms-1`}
+                  conPassMsg === 1 ? "text-success" : "text-danger"
+                } ms-1 lh-1 fs-5`}
                 style={{ fontSize: 11 }}
               >
-                {conPassMsg}
-              </sup>
+                {conPassMsg === 1 && <i className="fa-solid fa-circle-check" />}
+                {conPassMsg === 2 && <i className="fa-solid fa-circle-xmark" />}
+              </span>
             </label>
             <input
               type="text"
@@ -243,7 +315,7 @@ export default function Signup(props) {
               </label>
             </div>
           </div>
-          {/* ----------------------signup------------------------ */}
+          {/* ------------------signup----------------------- */}
           <div className="d-flex justify-content-end mt-4">
             <div className="btn btn-light fw-semibold px-3" onClick={signup}>
               SignUp
